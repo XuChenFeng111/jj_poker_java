@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.MailMapper">
+    <resultMap id="BaseResultMap" type="com.shengming.entity.MailDTO">
+        <id column="mail_id" jdbcType="INTEGER" property="mailId"/>
+        <result column="mail_type" jdbcType="INTEGER" property="mailType"/>
+        <result column="mail_name" jdbcType="VARCHAR" property="mailName"/>
+        <result column="mail_content" jdbcType="VARCHAR" property="mailContent"/>
+        <result column="mail_sendtime" jdbcType="TIMESTAMP" property="mailSendtime"/>
+        <result column="ifsee" jdbcType="INTEGER" property="ifsee"/>
+        <result column="gifttpye" jdbcType="INTEGER" property="gifttpye"/>
+        <result column="giftNum" jdbcType="INTEGER" property="giftnum"/>
+        <result column="userid" jdbcType="INTEGER" property="userid"/>
+        <result column="friendid" jdbcType="INTEGER" property="friendid"/>
+        <result column="ifsend" jdbcType="INTEGER" property="ifSend"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     mail_id, mail_type, mail_name, mail_content, mail_sendtime, ifsee, gifttpye, 
+    giftNum, userid, friendid,ifsend
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from jj_mail
+        where mail_id = #{mailId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jj_mail
+    where mail_id = #{mailId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.shengming.entity.MailDTO">
+    insert into jj_mail (mail_type,
+      mail_name, mail_content, mail_sendtime, 
+      ifsee, gifttpye, giftNum, 
+      userid, friendid,ifsend)
+    values ( #{mailType,jdbcType=INTEGER},
+      #{mailName,jdbcType=VARCHAR}, #{mailContent,jdbcType=VARCHAR}, now(),
+      #{ifsee,jdbcType=INTEGER}, #{gifttpye,jdbcType=INTEGER}, #{giftnum,jdbcType=INTEGER}, 
+      #{userid,jdbcType=INTEGER}, #{friendid,jdbcType=INTEGER},#{ifSend,jdbcType=INTEGER})
+  </insert>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.shengming.entity.MailDTO">
+    update jj_mail
+    set mail_id = #{mailId,jdbcType=INTEGER},
+      mail_type = #{mailType,jdbcType=INTEGER},
+      mail_name = #{mailName,jdbcType=VARCHAR},
+      mail_content = #{mailContent,jdbcType=VARCHAR},
+      mail_sendtime = #{mailSendtime,jdbcType=TIMESTAMP},
+      ifsee = #{ifsee,jdbcType=INTEGER},
+      gifttpye = #{gifttpye,jdbcType=INTEGER},
+      giftNum = #{giftnum,jdbcType=INTEGER},
+      userid = #{userid,jdbcType=INTEGER},
+      friendid = #{friendid,jdbcType=INTEGER},
+      ifsend = #{ifSend,jdbcType=INTEGER}
+    where mail_id = #{mailId,jdbcType=INTEGER}
+  </update>
+
+    <select id="ifTodaySend" resultMap="BaseResultMap">
+      SELECT
+		    *
+     from
+         jj_mail ll
+         WHERE ll.userid= #{userid,jdbcType=INTEGER}
+         and ll.friendid= #{friendid,jdbcType=INTEGER}
+         and ll.mail_sendtime BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59');
+    </select>
+
+    <select id="findMailFromFriendList" resultType="com.shengming.entity.MailDetailsDTO">
+        SELECT DISTINCT
+            ll.mail_id mailId,
+            ll.mail_sendtime mailSendtime,
+            mm.avatar friendAvatar ,
+            mm.nickname friendNickName,
+            ll.userid friendid
+        FROM
+            jj_mail ll
+            INNER JOIN jj_member mm ON mm.userid = ll.userid
+        WHERE
+            ll.friendid = #{userid,jdbcType=INTEGER}
+            AND ll.ifsee = 1
+            AND ll.mail_type = 1
+            AND mm.userid IN ( SELECT DISTINCT userid FROM jj_mail WHERE friendid = #{userid,jdbcType=INTEGER} AND ifsee = 1 )
+        ORDER BY
+            ll.mail_sendtime DESC
+
+            </select>
+
+<!--根据mailId更改邮件状态-->
+    <update id="updateStatus">
+        update jj_mail
+        set ifsee =0
+        where mail_id =#{mailId,jdbcType=INTEGER}
+    </update>
+
+    <select id="findIds" parameterType="integer" resultType="integer">
+        SELECT DISTINCT userid FROM `jj_mail` WHERE friendid = #{userid,jdbcType=INTEGER} and ifsee =1;
+    </select>
+
+    <select id="findUserIdByMailId" parameterType="integer" resultType="integer">
+        SELECT DISTINCT userid FROM `jj_mail` WHERE  mail_id =#{mailId,jdbcType=INTEGER}
+    </select>
+</mapper>

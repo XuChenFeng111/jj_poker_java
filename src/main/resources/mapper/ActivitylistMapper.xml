@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.ActivitylistMapper">
+  <resultMap id="BaseResultMap" type="com.shengming.entity.Activitylist">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="activity_name" jdbcType="VARCHAR" property="activityName" />
+    <result column="activity_content" jdbcType="VARCHAR" property="activityContent" />
+    <result column="effective_time" jdbcType="DATE" property="effectiveTime"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, activity_name, activity_content, DATE_FORMAT(effective_time,'%Y-%m-%d') effective_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from jj_activitylist
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jj_activitylist
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.shengming.entity.Activitylist">
+    insert into jj_activitylist (id, activity_name, activity_content,effective_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{activityName,jdbcType=VARCHAR}, #{activityContent,jdbcType=VARCHAR},#{effectiveTime,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.shengming.entity.Activitylist">
+    insert into jj_activitylist
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="activityName != null">
+        activity_name,
+      </if>
+      <if test="activityContent != null">
+        activity_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="activityName != null">
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityContent != null">
+        #{activityContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shengming.entity.Activitylist">
+    update jj_activitylist
+    <set>
+      <if test="activityName != null">
+        activity_name = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityContent != null">
+        activity_content = #{activityContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shengming.entity.Activitylist">
+    update jj_activitylist
+    set activity_name = #{activityName,jdbcType=VARCHAR},
+      activity_content = #{activityContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--查询所有信息-->
+  <select id="select_all" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jj_activitylist
+  </select>
+</mapper>

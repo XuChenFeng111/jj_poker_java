@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.RoomMapper">
+    <resultMap id="BaseResultMap" type="com.shengming.entity.RoomDTO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="playernum" jdbcType="VARCHAR" property="playernum"/>
+        <result column="gametype" jdbcType="INTEGER" property="gametype"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, playernum, gametype
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.shengming.entity.RoomDTO">
+        select
+        <include refid="Base_Column_List"/>
+        from jj_room
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jj_room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.shengming.entity.RoomDTO">
+    insert into jj_room (id, playernum, gametype
+      )
+    values (#{id,jdbcType=INTEGER}, #{playernum,jdbcType=VARCHAR}, #{gametype,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.shengming.entity.RoomDTO">
+        insert into jj_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="playernum != null">
+                playernum,
+            </if>
+            <if test="gametype != null">
+                gametype,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="playernum != null">
+                #{playernum,jdbcType=VARCHAR},
+            </if>
+            <if test="gametype != null">
+                #{gametype,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.shengming.entity.RoomDTO">
+        update jj_room
+        <set>
+            <if test="playernum != null">
+                playernum = #{playernum,jdbcType=VARCHAR},
+            </if>
+            <if test="gametype != null">
+                gametype = #{gametype,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.shengming.entity.RoomDTO">
+    update jj_room
+    set playernum = #{playernum,jdbcType=VARCHAR},
+      gametype = #{gametype,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="findAll" resultType="com.shengming.entity.RoomDTO" parameterType="integer">
+        SELECT a.num number,a.*
+        from
+        (select *,(length(playernum) - length(replace(playernum, ',', ''))) as num
+        from jj_room WHERE gametype = #{gametype,jdbcType=INTEGER})a
+        <where>
+            <if test="gametype == 1">
+                a.num != 3
+            </if>
+            <if test="gametype == 2">
+                a.num != 4
+            </if>
+        </where>
+    </select>
+
+    <select id="findPlayerNum" parameterType="integer" resultType="java.lang.String">
+        SELECT rr.playernum FROM `jj_room` rr WHERE rr.  ORDER BY id ASC
+    </select>
+
+    <select id="findNumById" parameterType="integer" resultType="integer">
+    SELECT LENGTH(playernum) FROM jj_room WHERE id =#{id,jdbcType=INTEGER} and gametype =#{gametype,jdbcType=INTEGER}
+  </select>
+
+    <update id="updateNumById">
+            UPDATE jj_room set
+            playernum = #{playernum,jdbcType=VARCHAR}
+            WHERE id  = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="findPlayNumById" parameterType="integer" resultType="string">
+    select playernum from jj_room  WHERE `id`  = #{id,jdbcType=INTEGER};
+  </select>
+
+    <delete id="deleteByPlayNum">
+    delete from jj_room where  playernum = #{playernum,jdbcType=VARCHAR} and gametype =#{gametype,jdbcType=INTEGER}
+  </delete>
+
+    <select id="findUserIds" parameterType="string" resultType="string">
+        select rr.playernum FROM `jj_room` rr WHERE find_in_set(#{userid},rr.playernum);
+    </select>
+</mapper>

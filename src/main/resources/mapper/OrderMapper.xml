@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.shengming.entity.OrderDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="member_fk_user_id" jdbcType="INTEGER" property="memberFkUserId" />
+    <result column="mall_fk_goods_id" jdbcType="INTEGER" property="mallFkGoodsId" />
+    <result column="member_fk_recommender_id" jdbcType="INTEGER" property="memberFkRecommenderId" />
+    <result column="buytime" jdbcType="TIMESTAMP" property="buytime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, order_id, member_fk_user_id, mall_fk_goods_id, member_fk_recommender_id, buytime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from jj_mall_purchase
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jj_mall_purchase
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.shengming.entity.OrderDTO">
+    insert into jj_mall_purchase (id, order_id, member_fk_user_id, 
+      mall_fk_goods_id, member_fk_recommender_id, buytime
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{memberFkUserId,jdbcType=INTEGER},
+      #{mallFkGoodsId,jdbcType=INTEGER}, #{memberFkRecommenderId,jdbcType=INTEGER}, now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.shengming.entity.OrderDTO">
+    insert into jj_mall_purchase
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="memberFkUserId != null">
+        member_fk_user_id,
+      </if>
+      <if test="mallFkGoodsId != null">
+        mall_fk_goods_id,
+      </if>
+      <if test="memberFkRecommenderId != null">
+        member_fk_recommender_id,
+      </if>
+      <if test="buytime != null">
+        buytime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="memberFkUserId != null">
+        #{memberFkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="mallFkGoodsId != null">
+        #{mallFkGoodsId,jdbcType=INTEGER},
+      </if>
+      <if test="memberFkRecommenderId != null">
+        #{memberFkRecommenderId,jdbcType=INTEGER},
+      </if>
+      <if test="buytime != null">
+        #{buytime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shengming.entity.OrderDTO">
+    update jj_mall_purchase
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberFkUserId != null">
+        member_fk_user_id = #{memberFkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="mallFkGoodsId != null">
+        mall_fk_goods_id = #{mallFkGoodsId,jdbcType=INTEGER},
+      </if>
+      <if test="memberFkRecommenderId != null">
+        member_fk_recommender_id = #{memberFkRecommenderId,jdbcType=INTEGER},
+      </if>
+      <if test="buytime != null">
+        buytime = #{buytime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shengming.entity.OrderDTO">
+    update jj_mall_purchase
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      member_fk_user_id = #{memberFkUserId,jdbcType=INTEGER},
+      mall_fk_goods_id = #{mallFkGoodsId,jdbcType=INTEGER},
+      member_fk_recommender_id = #{memberFkRecommenderId,jdbcType=INTEGER},
+      buytime = #{buytime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

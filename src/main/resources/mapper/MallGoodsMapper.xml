@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.MallGoodsMapper">
+
+    <resultMap id="BaseResultMap" type="com.shengming.entity.MallGoodsDTO">
+        <id column="goods_id" jdbcType="INTEGER" property="goodsId"/>
+        <result column="goods_name" jdbcType="INTEGER" property="goodsName"/>
+        <result column="unitprice" jdbcType="INTEGER" property="unitprice"/>
+        <result column="category" jdbcType="INTEGER" property="category"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+   goods_id,goods_name,unitprice,category
+  </sql>
+    <!--商城列表-->
+    <select id="findAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from jj_mall_goods
+        <where>
+            <if test="category != null ">
+                category = #{category,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!--查询数据库中单价的最小值-->
+    <select id="findMinPrice" resultType="integer">
+        SELECT min(unitprice) from jj_mall_goods;
+    </select>
+
+    <!--查询数据库中单价的最小值-->
+    <select id="findGoodsById" parameterType="integer" resultType="com.shengming.entity.MallGoodsDTO">
+        select
+        <include refid="Base_Column_List" />
+        from jj_mall_goods
+        where goods_id=#{#goodsId,jdbcType=INTEGER}
+    </select>
+
+</mapper>

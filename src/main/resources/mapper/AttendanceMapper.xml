@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.AttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.shengming.entity.Attendance">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_fk_user_id" jdbcType="INTEGER" property="memberFkUserId" />
+    <result column="signtime" jdbcType="DATE" property="signtime" />
+    <result column="continuousdays" jdbcType="INTEGER" property="continuousdays" />
+    <result column="prize" jdbcType="VARCHAR" property="prize" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, member_fk_user_id, signtime, continuousdays, prize
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from jj_attendance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jj_attendance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" >
+    insert into jj_attendance ( member_fk_user_id, signtime,
+      continuousdays, prize)
+    values (#{userId,jdbcType=INTEGER}, #{signtime,jdbcType=DATE},
+      #{continuousdays,jdbcType=INTEGER}, #{prize,jdbcType=VARCHAR});
+      update jj_member set point=point+CAST(#{prize,jdbcType=VARCHAR} AS SIGNED)
+        where userid = #{userId,jdbcType=INTEGER};
+  </insert>
+  <insert id="insertSelective" parameterType="com.shengming.entity.Attendance">
+    insert into jj_attendance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="memberFkUserId != null">
+        member_fk_user_id,
+      </if>
+      <if test="signtime != null">
+        signtime,
+      </if>
+      <if test="continuousdays != null">
+        continuousdays,
+      </if>
+      <if test="prize != null">
+        prize,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberFkUserId != null">
+        #{memberFkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="signtime != null">
+        #{signtime,jdbcType=DATE},
+      </if>
+      <if test="continuousdays != null">
+        #{continuousdays,jdbcType=INTEGER},
+      </if>
+      <if test="prize != null">
+        #{prize,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shengming.entity.Attendance">
+    update jj_attendance
+    <set>
+      <if test="memberFkUserId != null">
+        member_fk_user_id = #{memberFkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="signtime != null">
+        signtime = #{signtime,jdbcType=DATE},
+      </if>
+      <if test="continuousdays != null">
+        continuousdays = #{continuousdays,jdbcType=INTEGER},
+      </if>
+      <if test="prize != null">
+        prize = #{prize,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shengming.entity.Attendance">
+    update jj_attendance
+    set member_fk_user_id = #{memberFkUserId,jdbcType=INTEGER},
+      signtime = #{signtime,jdbcType=DATE},
+      continuousdays = #{continuousdays,jdbcType=INTEGER},
+      prize = #{prize,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="list" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select  signtime from jj_attendance
+    where member_fk_user_id=#{memberFkUserId,jdbcType=INTEGER}
+    order by signtime desc
+  </select>
+
+  <select id="listfordate" resultType="com.shengming.entity.Attendance">
+    select id,member_fk_user_id,DATE_FORMAT(signtime,'%Y-%m-%d')signdate,#{monday,jdbcType=VARCHAR} monday,#{sunday,jdbcType=VARCHAR} sunday,prize from jj_attendance where member_fk_user_id=#{memberFkUserId,jdbcType=INTEGER}
+    and signtime BETWEEN #{monday,jdbcType=VARCHAR} and #{sunday,jdbcType=VARCHAR}
+    order by signtime desc
+  </select>
+
+
+</mapper>

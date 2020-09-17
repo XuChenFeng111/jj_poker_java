@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.LotteryGiftMapper">
+
+    <resultMap id="BaseResultMap" type="com.shengming.entity.LotteryGiftDTO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="gitfid" jdbcType="INTEGER" property="gitfId"/>
+        <result column="giftname" jdbcType="VARCHAR" property="giftName"/>
+        <result column="probability" jdbcType="DOUBLE" property="probability"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     id,gitfid,giftname,probability
+  </sql>
+
+
+    <select id="findAllList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        jj_lotterygift
+    </select>
+
+    <select id="findProbability" parameterType="string" resultType="double">
+        SELECT probability
+        from
+        jj_lotterygift  WHERE gitfid =#{gitfId,jdbcType=VARCHAR};
+     </select>
+
+    <select id="findGiftNameById" parameterType="integer" resultType="com.shengming.entity.LotteryGiftDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        jj_lotterygift  WHERE id =#{id,jdbcType=INTEGER};
+    </select>
+
+</mapper>

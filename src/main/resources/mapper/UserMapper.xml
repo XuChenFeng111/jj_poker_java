@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.shengming.entity.UserDTO">
+        <id column="userid" jdbcType="INTEGER" property="userid" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="encrypt" jdbcType="VARCHAR" property="encrypt" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+        <result column="regtime" jdbcType="TIMESTAMP" property="regtime" />
+        <result column="lasttime" jdbcType="TIMESTAMP" property="lasttime" />
+        <result column="regip" jdbcType="VARCHAR" property="regip" />
+        <result column="lastip" jdbcType="VARCHAR" property="lastip" />
+        <result column="loginnum" jdbcType="SMALLINT" property="loginnum" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="groupid" jdbcType="INTEGER" property="groupid" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="amount" jdbcType="INTEGER" property="amount" />
+        <result column="point" jdbcType="INTEGER" property="point" />
+        <result column="goldcoin" jdbcType="INTEGER" property="goldcoin" />
+        <result column="islock" jdbcType="BIT" property="islock" />
+        <result column="qq" jdbcType="VARCHAR" property="qq" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="weixin" jdbcType="VARCHAR" property="weixin" />
+        <result column="isrn" jdbcType="BIT" property="isrn" />
+        <result column="realname" jdbcType="VARCHAR" property="realname" />
+        <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+        <result column="isvip" jdbcType="BIT" property="isvip" />
+        <result column="openid" jdbcType="VARCHAR" property="openid" />
+        <result column="access_token" jdbcType="VARCHAR" property="accessToken" />
+        <result column="access_expiretoken" jdbcType="VARCHAR" property="accessExpiretoken" />
+        <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken" />
+        <result column="recommender_id" jdbcType="INTEGER" property="recommenderId" />
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.shengming.entity.UserDTO">
+        <result column="remarks" jdbcType="LONGVARCHAR" property="remarks" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    userid, username, password, encrypt, nickname, avatar, regtime, lasttime, regip,
+    lastip, loginnum, email, groupid, address, amount, point, goldcoin, islock, qq, mobile,
+    weixin, isrn, realname, id_card, isvip, openid, access_token, access_expiretoken,
+    refresh_token, recommender_id
+  </sql>
+    <sql id="Blob_Column_List">
+    remarks
+  </sql>
+
+    <!--用户详情界面-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.shengming.entity.UserDetailsDTO">
+        select
+        userid,username,nickname,avatar,point,goldcoin,isrn,gender,level,fukanum  fukaNum,recommender_id recommenderId,isvip,ifphover,amount
+        from jj_member
+        where userid = #{userid,jdbcType=INTEGER}
+    </select>
+    <!--统计推荐人数量-->
+    <select id="findRecomNum" parameterType="java.lang.Integer" resultType="int">
+        SELECT count(recommender_id) recomNum from jj_member WHERE  recommender_id = #{userid,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jj_member
+    where userid = #{userid,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.shengming.entity.UserDTO">
+     insert into jj_member (userid, username, password,
+      encrypt, nickname, avatar,
+      regtime, lasttime, regip,
+      lastip, loginnum, email,
+      groupid, address, amount,
+      point, goldcoin, islock,
+      qq, mobile, weixin,
+      isrn, realname, id_card,
+      isvip, openid, access_token,
+      access_expiretoken, refresh_token, recommender_id,
+      remarks,gender,level,fukanum,token,logontype,ifphover)
+    values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{encrypt,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR},
+      #{regtime,jdbcType=TIMESTAMP}, #{lasttime,jdbcType=TIMESTAMP}, #{regip,jdbcType=VARCHAR},
+      #{lastip,jdbcType=VARCHAR}, #{loginnum,jdbcType=SMALLINT}, #{email,jdbcType=VARCHAR},
+      #{groupid,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{amount,jdbcType=INTEGER},
+      #{point,jdbcType=SMALLINT}, #{goldcoin,jdbcType=SMALLINT}, #{islock,jdbcType=BIT},
+      #{qq,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR},
+      #{isrn,jdbcType=BIT}, #{realname,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR},
+      #{isvip,jdbcType=BIT}, #{openid,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR},
+      #{accessExpiretoken,jdbcType=VARCHAR}, #{refreshToken,jdbcType=VARCHAR}, #{recommenderId,jdbcType=INTEGER},
+      #{remarks,jdbcType=LONGVARCHAR},#{gender,jdbcType=INTEGER},#{level,jdbcType=INTEGER},#{fukanum,jdbcType=INTEGER},
+      #{token,jdbcType=VARCHAR}, #{logonType,jdbcType=INTEGER},#{ifphover,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.shengming.entity.UserDTO">
+        insert into jj_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="encrypt != null">
+                encrypt,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="avatar != null">
+                avatar,
+            </if>
+            <if test="regtime != null">
+                regtime,
+            </if>
+            <if test="lasttime != null">
+                lasttime,
+            </if>
+            <if test="regip != null">
+                regip,
+            </if>
+            <if test="lastip != null">
+                lastip,
+            </if>
+            <if test="loginnum != null">
+                loginnum,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="groupid != null">
+                groupid,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="point != null">
+                point,
+            </if>
+            <if test="goldcoin != null">
+                goldcoin,
+            </if>
+            <if test="islock != null">
+                islock,
+            </if>
+            <if test="qq != null">
+                qq,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="weixin != null">
+                weixin,
+            </if>
+            <if test="isrn != null">
+                isrn,
+            </if>
+            <if test="realname != null">
+                realname,
+            </if>
+            <if test="idCard != null">
+                id_card,
+            </if>
+            <if test="isvip != null">
+                isvip,
+            </if>
+            <if test="openid != null">
+                openid,
+            </if>
+            <if test="accessToken != null">
+                access_token,
+            </if>
+            <if test="accessExpiretoken != null">
+                access_expiretoken,
+            </if>
+            <if test="refreshToken != null">
+                refresh_token,
+            </if>
+            <if test="recommenderId != null">
+                recommender_id,
+            </if>
+            <if test="remarks != null">
+                remarks,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="encrypt != null">
+                #{encrypt,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null">
+                #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="regtime != null">
+                #{regtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lasttime != null">
+                #{lasttime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regip != null">
+                #{regip,jdbcType=VARCHAR},
+            </if>
+            <if test="lastip != null">
+                #{lastip,jdbcType=VARCHAR},
+            </if>
+            <if test="loginnum != null">
+                #{loginnum,jdbcType=SMALLINT},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="groupid != null">
+                #{groupid,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+                #{amount,jdbcType=INTEGER},
+            </if>
+            <if test="point != null">
+                #{point,jdbcType=SMALLINT},
+            </if>
+            <if test="goldcoin != null">
+                #{goldcoin,jdbcType=SMALLINT},
+            </if>
+            <if test="islock != null">
+                #{islock,jdbcType=BIT},
+            </if>
+            <if test="qq != null">
+                #{qq,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="weixin != null">
+                #{weixin,jdbcType=VARCHAR},
+            </if>
+            <if test="isrn != null">
+                #{isrn,jdbcType=BIT},
+            </if>
+            <if test="realname != null">
+                #{realname,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null">
+                #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="isvip != null">
+                #{isvip,jdbcType=BIT},
+            </if>
+            <if test="openid != null">
+                #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="accessToken != null">
+                #{accessToken,jdbcType=VARCHAR},
+            </if>
+            <if test="accessExpiretoken != null">
+                #{accessExpiretoken,jdbcType=VARCHAR},
+            </if>
+            <if test="refreshToken != null">
+                #{refreshToken,jdbcType=VARCHAR},
+            </if>
+            <if test="recommenderId != null">
+                #{recommenderId,jdbcType=INTEGER},
+            </if>
+            <if test="remarks != null">
+                #{remarks,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.shengming.entity.UserDTO">
+        update jj_member
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="encrypt != null">
+                encrypt = #{encrypt,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="regtime != null">
+                regtime = #{regtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lasttime != null">
+                lasttime = #{lasttime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regip != null">
+                regip = #{regip,jdbcType=VARCHAR},
+            </if>
+            <if test="lastip != null">
+                lastip = #{lastip,jdbcType=VARCHAR},
+            </if>
+            <if test="loginnum != null">
+                loginnum = #{loginnum,jdbcType=SMALLINT},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="groupid != null">
+                groupid = #{groupid,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=INTEGER},
+            </if>
+            <if test="point != null">
+                point = #{point,jdbcType=SMALLINT},
+            </if>
+            <if test="goldcoin != null">
+                goldcoin = #{goldcoin,jdbcType=SMALLINT},
+            </if>
+            <if test="islock != null">
+                islock = #{islock,jdbcType=BIT},
+            </if>
+            <if test="qq != null">
+                qq = #{qq,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="weixin != null">
+                weixin = #{weixin,jdbcType=VARCHAR},
+            </if>
+            <if test="isrn != null">
+                isrn = #{isrn,jdbcType=BIT},
+            </if>
+            <if test="realname != null">
+                realname = #{realname,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null">
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="isvip != null">
+                isvip = #{isvip,jdbcType=BIT},
+            </if>
+            <if test="openid != null">
+                openid = #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="accessToken != null">
+                access_token = #{accessToken,jdbcType=VARCHAR},
+            </if>
+            <if test="accessExpiretoken != null">
+                access_expiretoken = #{accessExpiretoken,jdbcType=VARCHAR},
+            </if>
+            <if test="refreshToken != null">
+                refresh_token = #{refreshToken,jdbcType=VARCHAR},
+            </if>
+            <if test="recommenderId != null">
+                recommender_id = #{recommenderId,jdbcType=INTEGER},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where userid = #{userid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.shengming.entity.UserDTO">
+    update jj_member
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      encrypt = #{encrypt,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      regtime = #{regtime,jdbcType=TIMESTAMP},
+      lasttime = #{lasttime,jdbcType=TIMESTAMP},
+      regip = #{regip,jdbcType=VARCHAR},
+      lastip = #{lastip,jdbcType=VARCHAR},
+      loginnum = #{loginnum,jdbcType=SMALLINT},
+      email = #{email,jdbcType=VARCHAR},
+      groupid = #{groupid,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=INTEGER},
+      point = #{point,jdbcType=SMALLINT},
+      goldcoin = #{goldcoin,jdbcType=SMALLINT},
+      islock = #{islock,jdbcType=BIT},
+      qq = #{qq,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      weixin = #{weixin,jdbcType=VARCHAR},
+      isrn = #{isrn,jdbcType=BIT},
+      realname = #{realname,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      isvip = #{isvip,jdbcType=BIT},
+      openid = #{openid,jdbcType=VARCHAR},
+      access_token = #{accessToken,jdbcType=VARCHAR},
+      access_expiretoken = #{accessExpiretoken,jdbcType=VARCHAR},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      recommender_id = #{recommenderId,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=LONGVARCHAR}
+    where userid = #{userid,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.shengming.entity.UserDTO">
+    update jj_member
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      encrypt = #{encrypt,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      regtime = #{regtime,jdbcType=TIMESTAMP},
+      lasttime = #{lasttime,jdbcType=TIMESTAMP},
+      regip = #{regip,jdbcType=VARCHAR},
+      lastip = #{lastip,jdbcType=VARCHAR},
+      loginnum = #{loginnum,jdbcType=SMALLINT},
+      email = #{email,jdbcType=VARCHAR},
+      groupid = #{groupid,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=INTEGER},
+      point = #{point,jdbcType=SMALLINT},
+      goldcoin = #{goldcoin,jdbcType=SMALLINT},
+      islock = #{islock,jdbcType=BIT},
+      qq = #{qq,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      weixin = #{weixin,jdbcType=VARCHAR},
+      isrn = #{isrn,jdbcType=BIT},
+      realname = #{realname,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      isvip = #{isvip,jdbcType=BIT},
+      openid = #{openid,jdbcType=VARCHAR},
+      access_token = #{accessToken,jdbcType=VARCHAR},
+      access_expiretoken = #{accessExpiretoken,jdbcType=VARCHAR},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      recommender_id = #{recommenderId,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
+  </update>
+
+    <update id="updateIsrn" parameterType="com.shengming.entity.UserIsrnDTO">
+    update jj_member
+    set isrn = 1,
+      realname = #{realname,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR}
+      where userid = #{userId,jdbcType=INTEGER}
+    </update>
+
+    <!--更新推荐人-->
+    <update id="update_Recommender" parameterType="com.shengming.entity.UserDTO">
+        update jj_member
+        set recommender_id = #{recommenderId,jdbcType=INTEGER}
+        where userid = #{userid,jdbcType=INTEGER}
+    </update>
+
+    <!--查询手机号是否存在-->
+    <select id="ifPho" parameterType="string" resultType="string">
+        SELECT mobile from jj_member WHERE mobile = #{mobile,jdbcType=VARCHAR};
+    </select>
+    <!--查询该手机号对应的openid是否存在 确定是手机号首次登陆-->
+    <select id="ifOpenidByMobile" parameterType="string" resultType="string">
+        SELECT openid from jj_member WHERE mobile = #{mobile,jdbcType=VARCHAR};
+    </select>
+    <!--查询是否有重复的昵称-->
+    <select id="ifNickname" parameterType="string" resultType="string">
+        SELECT nickname from jj_member WHERE nickname = #{nickname,jdbcType=VARCHAR};
+    </select>
+    <!--根据userid查询token-->
+    <select id="getToken" parameterType="string" resultType="string">
+        select token from jj_member where userid = #{userid,jdbcType=VARCHAR};
+    </select>
+    <!--根据手机号码更新token-->
+    <update id="updateToken">
+        update jj_member
+     set
+      token = #{token,jdbcType=VARCHAR}
+      where mobile = #{mobile,jdbcType=INTEGER}
+    </update>
+    <!--查询是否有openid-->
+    <select id="ifOpenId" parameterType="string" resultType="string">
+        SELECT openid from jj_member WHERE openid = #{openId,jdbcType=VARCHAR};
+    </select>
+
+    <!--根据openid更新token-->
+    <update id="updateTokenForVX">
+        update jj_member
+     set
+      token = #{token,jdbcType=VARCHAR}
+      where openid = #{openId,jdbcType=INTEGER}
+    </update>
+
+    <!--主页更换头像和昵称-->
+    <update id="updateNickname">
+        update jj_member
+        <set>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null and nickName != ''">
+                nickname = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender =  #{gender,jdbcType=INTEGER},
+            </if>
+        </set>
+      where userid = #{userId,jdbcType=INTEGER}
+    </update>
+
+    <!--手机号码查询userid-->
+    <select id="findUserIdByPhoNo" parameterType="string" resultType="integer">
+        SELECT userid from jj_member WHERE mobile = #{mobile,jdbcType=INTEGER};
+    </select>
+    <!--userid查询token-->
+    <select id="findTokenByUserId" parameterType="integer" resultType="string">
+        SELECT token from jj_member WHERE userid = #{userId,jdbcType=INTEGER};
+    </select>
+
+    <select id="findUserIdByOpenId" parameterType="string" resultType="integer">
+        SELECT userid from jj_member WHERE openid = #{openId,jdbcType=INTEGER};
+    </select>
+
+    <update id="updatePhoStatus">
+         update jj_member
+     set
+      mobile = #{mobile,jdbcType=VARCHAR},
+      ifphover = #{ifphover,jdbcType=INTEGER}
+      where userid = #{userId,jdbcType=INTEGER}
+    </update>
+
+    <!--更新账户余额-->
+    <update id="updateAmount">
+        update jj_member
+      <set>
+          userid =#{userid,jdbcType=INTEGER},username=#{username,jdbcType=VARCHAR},nickname=#{nickname,jdbcType=VARCHAR},avatar=#{avatar,jdbcType=VARCHAR},
+          <if test="point != null and point != ''or point == 0">
+              point = #{point,jdbcType=INTEGER},
+          </if>
+          <if test="goldcoin != null and goldcoin != ''or goldcoin == 0">
+              goldcoin = #{goldcoin,jdbcType=INTEGER},
+          </if>
+          <if test="fukaNum != null and fukaNum != ''or fukaNum == 0">
+              fukanum = #{fukaNum,jdbcType=INTEGER},
+          </if>
+          isrn=#{isrn,jdbcType=INTEGER},gender=#{gender,jdbcType=INTEGER},level=#{level,jdbcType=INTEGER},
+          recommender_id=#{recommenderId,jdbcType=INTEGER},
+          isvip=#{isvip,jdbcType=INTEGER},ifphover=#{ifphover,jdbcType=INTEGER},amount=#{amount,jdbcType=INTEGER}
+      </set>
+      where userid = #{userid,jdbcType=INTEGER}
+    </update>
+
+    <update id="offline">
+        update jj_member
+        set
+        lasttime = now(),
+        token = ""
+        where  userid = #{userid,jdbcType=INTEGER}
+    </update>
+
+    <!--找出用户常玩游戏-->
+    <select id="findOftenGame" parameterType="integer" resultType="integer">
+      SELECT gametype  FROM jj_gamescore WHERE member_fk_user_id =  #{userid,jdbcType=INTEGER}  GROUP BY gametype ORDER BY COUNT(*) DESC LIMIT 1
+    </select>
+</mapper>

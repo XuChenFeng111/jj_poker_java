@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shengming.dao.LotteryMapper">
+
+    <resultMap id="BaseResultMap" type="com.shengming.entity.UserDTO">
+        <id column="userid" jdbcType="INTEGER" property="userid"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="encrypt" jdbcType="VARCHAR" property="encrypt"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="regtime" jdbcType="TIMESTAMP" property="regtime"/>
+        <result column="lasttime" jdbcType="TIMESTAMP" property="lasttime"/>
+        <result column="regip" jdbcType="VARCHAR" property="regip"/>
+        <result column="lastip" jdbcType="VARCHAR" property="lastip"/>
+        <result column="loginnum" jdbcType="SMALLINT" property="loginnum"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="groupid" jdbcType="INTEGER" property="groupid"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="point" jdbcType="INTEGER" property="point"/>
+        <result column="goldcoin" jdbcType="INTEGER" property="goldcoin"/>
+        <result column="islock" jdbcType="BIT" property="islock"/>
+        <result column="qq" jdbcType="VARCHAR" property="qq"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="weixin" jdbcType="VARCHAR" property="weixin"/>
+        <result column="isrn" jdbcType="BIT" property="isrn"/>
+        <result column="realname" jdbcType="VARCHAR" property="realname"/>
+        <result column="id_card" jdbcType="VARCHAR" property="idCard"/>
+        <result column="isvip" jdbcType="BIT" property="isvip"/>
+        <result column="openid" jdbcType="VARCHAR" property="openid"/>
+        <result column="access_token" jdbcType="VARCHAR" property="accessToken"/>
+        <result column="access_expiretoken" jdbcType="VARCHAR" property="accessExpiretoken"/>
+        <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken"/>
+        <result column="recommender_id" jdbcType="INTEGER" property="recommenderId"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.shengming.entity.UserDTO">
+        <result column="remarks" jdbcType="LONGVARCHAR" property="remarks"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    userid, username, password, encrypt, nickname, avatar, regtime, lasttime, regip,
+    lastip, loginnum, email, groupid, address, amount, point, goldcoin, islock, qq, mobile,
+    weixin, isrn, realname, id_card, isvip, openid, access_token, access_expiretoken,
+    refresh_token, recommender_id
+  </sql>
+    <sql id="Blob_Column_List">
+    remarks
+  </sql>
+    <update id="update_lottery" parameterType="com.shengming.entity.UserDTO">
+        update jj_member set point=#{point,jdbcType=SMALLINT},goldcoin=#{goldcoin,jdbcType=SMALLINT}
+        where userid = #{userid,jdbcType=INTEGER}
+    </update>
+
+</mapper>
